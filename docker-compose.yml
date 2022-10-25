@@ -1,0 +1,33 @@
+version: '3'
+services:
+  node:
+    container_name: mb_node
+    image: node:16.18.0
+    tty: true
+    volumes:
+      - ./:/work
+    ports:
+      - 30003:3000
+    environment:
+      - HOST=0.0.0.0
+    working_dir: /work
+    depends_on:
+      - postgres
+  postgres:
+    container_name: mb_postgres
+    image: postgres:latest
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 54322:5432
+  redis:
+    container_name: mb_redis
+    image: redis:latest
+    ports:
+      - 63793:6379
+volumes:
+  postgres-data:
